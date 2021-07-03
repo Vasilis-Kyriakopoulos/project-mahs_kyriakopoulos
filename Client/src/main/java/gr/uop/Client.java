@@ -1,26 +1,190 @@
 package gr.uop;
 
+import java.io.PrintWriter;
+import java.net.Socket;
+import java.util.Map;
+import java.util.Scanner;
+import java.util.Set;
+import java.util.TreeMap;
+
 import javafx.application.Application;
+import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.TextField;
+import javafx.scene.layout.GridPane;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.Priority;
+import javafx.scene.layout.Region;
 import javafx.scene.layout.StackPane;
+import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
 /**
  * JavaFX App
  */
 public class Client extends Application {
+    
+
+
+    public static void SendClientInfo(Socket clientSocket ,PrintWriter toServer,Scanner fromServer,String customer){
+        Scanner keyboard = new Scanner(System.in);
+       
+            String line = keyboard.nextLine();
+            toServer.println(customer);
+            // toServer.flush();
+            String response = fromServer.nextLine();
+            System.out.println("Response: " + response);
+    }
+
+    public static TreeMap<String,Button> treeMapKeyboardCreate(){
+        TreeMap buttonsMap = new TreeMap<String,Button>();
+        
+        for(char c = 'A'; c <= 'Z'; ++c){
+            Button a = new Button(Character.toString(c));
+            a.setPrefWidth(100);
+            a.setPrefHeight(50);
+            buttonsMap.put(Character.toString(c), a);
+        }
+        for(char c = '0'; c <= '9'; ++c){
+            
+            Button a = new Button(Character.toString(c));
+            a.setPrefWidth(100);
+            a.setPrefHeight(50);
+            buttonsMap.put(Character.toString(c),a);
+        }
+        Button enter = new Button("Enter");
+        enter.setPrefWidth(100);
+        enter.setPrefHeight(50);
+        Button backspace = new Button("BackSpace");
+        backspace.setPrefWidth(205);
+        backspace.setPrefHeight(50);
+        Button space = new Button("Space");
+        space.setPrefWidth(Double.MAX_VALUE);
+        space.setPrefHeight(50);
+        buttonsMap.put("Enter",  enter);
+        buttonsMap.put("BackSpace",backspace);
+        buttonsMap.put("Space",space);
+
+        return buttonsMap;
+    }
+
+    public static void treemapToPane(TreeMap<String,Button> s1 , GridPane s2){
+        //First row of keyboard
+        s2.add((Button)s1.get("Q"),0,0);
+        s2.add((Button)s1.get("W"),1,0);
+        s2.add((Button)s1.get("E"),2,0);
+        s2.add((Button)s1.get("R"),3,0);
+        s2.add((Button)s1.get("T"),4,0);
+        s2.add((Button)s1.get("Y"),5,0);
+        s2.add((Button)s1.get("U"),6,0);
+        s2.add((Button)s1.get("I"),7,0);
+        s2.add((Button)s1.get("O"),8,0);
+        s2.add((Button)s1.get("P"),9,0);
+        s2.add((Button)s1.get("7"),14,0);
+        s2.add((Button)s1.get("8"),15,0);
+        s2.add((Button)s1.get("9"),16,0);
+        //Second row of keyboard
+        s2.add((Button)s1.get("A"),0,1);
+        s2.add((Button)s1.get("S"),1,1);
+        s2.add((Button)s1.get("D"),2,1);
+        s2.add((Button)s1.get("F"),3,1);
+        s2.add((Button)s1.get("G"),4,1);
+        s2.add((Button)s1.get("H"),5,1);
+        s2.add((Button)s1.get("J"),6,1);
+        s2.add((Button)s1.get("K"),7,1);
+        s2.add((Button)s1.get("L"),8,1);
+        s2.add((Button)s1.get("Enter"),9,1);
+        s2.add((Button)s1.get("4"),14,1);
+        s2.add((Button)s1.get("5"),15,1);
+        s2.add((Button)s1.get("6"),16,1);
+        //Third row of keyboard
+        s2.add((Button)s1.get("Z"),0,2);
+        s2.add((Button)s1.get("X"),1,2);
+        s2.add((Button)s1.get("C"),2,2);
+        s2.add((Button)s1.get("V"),3,2);
+        s2.add((Button)s1.get("B"),4,2);
+        s2.add((Button)s1.get("N"),5,2);
+        s2.add((Button)s1.get("M"),6,2);
+
+        s2.add((Button)s1.get("BackSpace"),7,2,3,1);
+        s2.add((Button)s1.get("1"),14,2);
+        s2.add((Button)s1.get("2"),15,2);
+        s2.add((Button)s1.get("3"),16,2);
+        //Fourth row of keyboard
+        s2.add((Button)s1.get("0"),14,3);
+        s2.add((Button)s1.get("Space"),0,3,10,1);
+       
+    }
+
+
+
 
     @Override
     public void start(Stage stage) {
-        var label = new Label("Hello, JavaFX Client");
-        var scene = new Scene(new StackPane(label), 640, 480);
-        stage.setScene(scene);
-        stage.show();
-    }
+        HBox nameHbox = new HBox();
+        TextField nameTextField  = new TextField();
+        nameTextField.setPrefWidth(600);
+        nameTextField.setPrefHeight(40);
+        nameTextField.setPromptText("Πινακίδα οχήματος");
+        nameHbox.getChildren().addAll(nameTextField);
+        nameHbox.setAlignment(Pos.CENTER);
+        nameHbox.setSpacing(10);
+        HBox.setMargin(nameHbox, new Insets(1000));
+        GridPane keyboardPane = new GridPane();
+        keyboardPane.setAlignment(Pos.BOTTOM_CENTER);
+        keyboardPane.setPadding(new Insets(100,100,100,100));
+		keyboardPane.setHgap(5);
+		keyboardPane.setVgap(5);
+        TreeMap<String,Button> buttonsMap = treeMapKeyboardCreate();
+        treemapToPane(buttonsMap, keyboardPane);
+        for (Map.Entry<String, Button> entry : buttonsMap.entrySet()){
+            Button tmp  = entry.getValue();
+            tmp.setOnMouseClicked(event -> {
+                String txt =nameTextField.getText();
+                String s = tmp.getText();
+                if(s == "Enter"){
 
+                }
+                else if(s == "BackSpace"){
+                    if(txt.length()>0){
+                        nameTextField.setText(txt.substring(0,txt.length()-1));
+                    }
+                }
+                else if(s == "Space"){
+                    nameTextField.setText(txt + " ");
+                }
+                else{
+                nameTextField.setText(txt + tmp.getText());
+                }
+            });
+        }
+        var scene = new Scene(new StackPane(nameHbox,keyboardPane), 1024, 768);
+        stage.setScene(scene);
+        stage.setMaxHeight(1080);
+        stage.setMaxWidth(1920);
+        stage.setMinHeight(768);
+        stage.setMinWidth(1024);
+        stage.show();
+
+
+
+        //try (Socket clientSocket = new Socket("localhost", 6666);
+        //PrintWriter toServer = new PrintWriter(clientSocket.getOutputStream(), true);
+        //Scanner fromServer = new Scanner(clientSocket.getInputStream())) {
+        //    SendClientInfo(clientSocket, toServer, fromServer,"160");
+        //}
+        // catch (Exception e) {
+        //    System.out.println(e);       
+        //}
+        
+    }
+   
     public static void main(String[] args) {
         launch(args);
     }
+    
 
 }
