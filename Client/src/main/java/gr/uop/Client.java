@@ -11,15 +11,21 @@ import javafx.application.Application;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.Label;
+import javafx.scene.control.RadioButton;
 import javafx.scene.control.TextField;
+import javafx.scene.control.ButtonBar.ButtonData;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
+import javafx.scene.text.Text;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
 
 /**
@@ -27,7 +33,7 @@ import javafx.stage.Stage;
  */
 public class Client extends Application {
     
-
+    
 
     public static void SendClientInfo(Socket clientSocket ,PrintWriter toServer,Scanner fromServer,String customer){
         Scanner keyboard = new Scanner(System.in);
@@ -124,8 +130,77 @@ public class Client extends Application {
 
     @Override
     public void start(Stage stage) {
+        Stage newWindow = new Stage();
         HBox nameHbox = new HBox();
         TextField nameTextField  = new TextField();
+        HBox vehicleBox = new HBox();
+        vehicleBox.getChildren().add(new Text(""));
+        vehicleBox.getChildren().add(new Text("Αυτόκίνητο"));
+        vehicleBox.getChildren().add(new RadioButton());
+        vehicleBox.getChildren().add(new Text("Τζιπ"));
+        vehicleBox.getChildren().add(new RadioButton());
+        vehicleBox.getChildren().add(new Text("Μοτοσυκλέτα"));
+        vehicleBox.getChildren().add(new RadioButton());
+        vehicleBox.setStyle("-fx-padding: 15;-fx-spacing: 15;");
+        VBox servicesBox = new VBox();
+        Services services = new Services();
+        for(int i =0;i<services.list.size();i++){
+            servicesBox.getChildren().add(new Text(services.list.get(i).getName()));
+        }
+        servicesBox.setStyle("-fx-padding: 15;-fx-spacing: 10;");
+        VBox carBox = new VBox();
+       
+        for(int i =0;i<services.list.size();i++){
+            carBox.getChildren().add(new Text(services.list.get(i).getPriceCar().toString()));
+        }
+        carBox.setStyle("-fx-padding: 15;-fx-spacing: 10;");
+
+        VBox radio1Box = new VBox();
+        for(int i =0;i<services.list.size();i++){
+            radio1Box.getChildren().add(new RadioButton());
+            radio1Box.getChildren().get(i).setOnMouseClicked(event -> {   
+            });
+            
+        }
+        
+        radio1Box.setStyle("-fx-padding: 15;-fx-spacing: 10;");
+
+        VBox jeepBox = new VBox();
+        VBox radio2Box = new VBox();
+        for(int i =0;i<services.list.size();i++){
+            radio2Box.getChildren().add(new RadioButton());
+            radio2Box.getChildren().get(i).setOnMouseClicked(event -> {   
+            });
+            
+        }
+        
+        radio2Box.setStyle("-fx-padding: 15;-fx-spacing: 10;");
+        for(int i =0;i<services.list.size();i++){
+            jeepBox.getChildren().add(new Text(services.list.get(i).getPriceJeep().toString()));
+        }
+        jeepBox.setStyle("-fx-padding: 15;-fx-spacing: 10;");
+        
+        VBox motoBox = new VBox();
+       
+        for(int i =0;i<services.list.size();i++){
+            motoBox.getChildren().add(new Text(services.list.get(i).getPriceMoto().toString()));
+        }
+        motoBox.setStyle("-fx-padding: 15;-fx-spacing: 10;");
+        VBox radio3Box = new VBox();
+        for(int i =0;i<services.list.size();i++){
+            radio3Box.getChildren().add(new RadioButton());
+            radio3Box.getChildren().get(i).setOnMouseClicked(event -> {   
+            });
+            
+        }
+        
+        radio3Box.setStyle("-fx-padding: 15;-fx-spacing: 10;");
+        HBox formBox = new HBox();
+
+
+        formBox.getChildren().addAll(servicesBox,carBox,radio1Box,jeepBox,radio2Box,motoBox,radio3Box);
+        formBox.setStyle("-fx-border-style: dashed");
+
         nameTextField.setPrefWidth(600);
         nameTextField.setPrefHeight(40);
         nameTextField.setPromptText("Πινακίδα οχήματος");
@@ -142,11 +217,22 @@ public class Client extends Application {
         treemapToPane(buttonsMap, keyboardPane);
         for (Map.Entry<String, Button> entry : buttonsMap.entrySet()){
             Button tmp  = entry.getValue();
+            
             tmp.setOnMouseClicked(event -> {
                 String txt =nameTextField.getText();
                 String s = tmp.getText();
                 if(s == "Enter"){
-
+                    String txt2 = txt.trim();
+                    if(txt2.length()<2){
+                        Alert alert = new Alert(Alert.AlertType.ERROR);
+                        //Setting the title
+                        alert.setTitle("Alert");
+                        alert.setContentText("Please give correct input(at least two characters)");
+                        alert.show();    
+                    }
+                else{
+                    newWindow.show();
+                }
                 }
                 else if(s == "BackSpace"){
                     if(txt.length()>0){
@@ -161,12 +247,30 @@ public class Client extends Application {
                 }
             });
         }
-        var scene = new Scene(new StackPane(nameHbox,keyboardPane), 1024, 768);
+        Scene scene = new Scene(new StackPane(nameHbox,keyboardPane), 1024, 768);
         stage.setScene(scene);
         stage.setMaxHeight(1080);
         stage.setMaxWidth(1920);
         stage.setMinHeight(768);
         stage.setMinWidth(1024);
+        VBox  secondaryLayout = new VBox();
+        secondaryLayout.getChildren().addAll(vehicleBox,formBox);
+        secondaryLayout.setAlignment(Pos.CENTER);
+        secondaryLayout.setPadding(new Insets(1000));
+        
+
+        Scene secondScene = new Scene(secondaryLayout, 1024, 768);
+    
+        newWindow.setTitle("Second Stage");           
+        newWindow.setScene(secondScene);           
+        newWindow.initModality(Modality.WINDOW_MODAL);
+        newWindow.initOwner(stage);
+        newWindow.setX(stage.getX() + 200);
+        newWindow.setY(stage.getY() + 100);
+        newWindow.setMaxHeight(1080);
+        newWindow.setMaxWidth(1920);
+        newWindow.setMinHeight(768);
+        newWindow.setMinWidth(1024);
         stage.show();
 
 
