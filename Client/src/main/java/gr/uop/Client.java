@@ -1,5 +1,6 @@
 package gr.uop;
 
+
 import java.io.PrintWriter;
 import java.net.Socket;
 import java.util.Map;
@@ -8,6 +9,9 @@ import java.util.Set;
 import java.util.TreeMap;
 
 import javafx.application.Application;
+import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
@@ -17,7 +21,9 @@ import javafx.scene.control.ButtonType;
 import javafx.scene.control.Label;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.TextField;
+import javafx.scene.control.ToggleGroup;
 import javafx.scene.control.ButtonBar.ButtonData;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
@@ -34,7 +40,36 @@ import javafx.stage.Stage;
 public class Client extends Application {
     
     
-
+    private class SelectVehicle implements EventHandler<MouseEvent>{
+        ObservableList<RadioButton> rd1 ;
+        ObservableList<RadioButton> rd2 ;
+        ObservableList<RadioButton> rd3 ;
+        public SelectVehicle(ObservableList<RadioButton> rd1 ,ObservableList<RadioButton> rd2,ObservableList<RadioButton> rd3){
+            this.rd1 = rd1;
+            this.rd2 = rd2;
+            this.rd3 = rd3;
+        }
+        @Override
+        public void handle(MouseEvent event) {
+            
+            for(int i =1 ; i< rd1.size();i++){
+                rd1.get(i).setDisable(false);
+            }
+                RadioButton a =  (RadioButton)rd2.get(0);
+                a.setSelected(false);
+                for(int i =1 ; i< rd2.size();i++){
+                    rd2.get(i).setSelected(false);
+                    rd2.get(i).setDisable(true);
+                }
+                a =  (RadioButton) rd3.get(0);
+                a.setSelected(false);
+                for(int i =1 ; i< rd3.size();i++){
+                    rd2.get(i).setSelected(false);
+                    rd3.get(i).setDisable(true);
+                }
+        }
+    
+    }
     public static void SendClientInfo(Socket clientSocket ,PrintWriter toServer,Scanner fromServer,String customer){
         Scanner keyboard = new Scanner(System.in);
        
@@ -44,7 +79,9 @@ public class Client extends Application {
             String response = fromServer.nextLine();
             System.out.println("Response: " + response);
     }
-
+    
+    
+    
     public static TreeMap<String,Button> treeMapKeyboardCreate(){
         TreeMap buttonsMap = new TreeMap<String,Button>();
         
@@ -76,7 +113,11 @@ public class Client extends Application {
 
         return buttonsMap;
     }
-
+    public static void disableRadiobuttons(ObservableList<RadioButton> a){
+        for(int i =1 ; i< a.size();i++){
+            a.get(i).setDisable(true);
+        }
+    }
     public static void treemapToPane(TreeMap<String,Button> s1 , GridPane s2){
         //First row of keyboard
         s2.add((Button)s1.get("Q"),0,0);
@@ -133,70 +174,60 @@ public class Client extends Application {
         Stage newWindow = new Stage();
         HBox nameHbox = new HBox();
         TextField nameTextField  = new TextField();
-        HBox vehicleBox = new HBox();
-        vehicleBox.getChildren().add(new Text(""));
-        vehicleBox.getChildren().add(new Text("Αυτόκίνητο"));
-        vehicleBox.getChildren().add(new RadioButton());
-        vehicleBox.getChildren().add(new Text("Τζιπ"));
-        vehicleBox.getChildren().add(new RadioButton());
-        vehicleBox.getChildren().add(new Text("Μοτοσυκλέτα"));
-        vehicleBox.getChildren().add(new RadioButton());
-        vehicleBox.setStyle("-fx-padding: 15;-fx-spacing: 15;");
         VBox servicesBox = new VBox();
         Services services = new Services();
+        servicesBox.getChildren().add(new Text("Τύπος Οχήματος"));
         for(int i =0;i<services.list.size();i++){
             servicesBox.getChildren().add(new Text(services.list.get(i).getName()));
         }
-        servicesBox.setStyle("-fx-padding: 15;-fx-spacing: 10;");
+
+        servicesBox.setStyle("-fx-padding: 19;-fx-spacing: 10;-fx-border-style: solid");
         VBox carBox = new VBox();
-       
+        carBox.getChildren().add(new Text("Αυτόκίνητο"));
         for(int i =0;i<services.list.size();i++){
             carBox.getChildren().add(new Text(services.list.get(i).getPriceCar().toString()));
         }
-        carBox.setStyle("-fx-padding: 15;-fx-spacing: 10;");
+        carBox.setStyle("-fx-padding: 17;-fx-spacing: 10;-fx-border-style: solid");
 
         VBox radio1Box = new VBox();
+        radio1Box.getChildren().add(new RadioButton());
         for(int i =0;i<services.list.size();i++){
             radio1Box.getChildren().add(new RadioButton());
-            radio1Box.getChildren().get(i).setOnMouseClicked(event -> {   
-            });
-            
         }
         
-        radio1Box.setStyle("-fx-padding: 15;-fx-spacing: 10;");
+        radio1Box.setStyle("-fx-padding: 14;-fx-spacing: 10;-fx-border-style: solid");
 
         VBox jeepBox = new VBox();
         VBox radio2Box = new VBox();
+
         for(int i =0;i<services.list.size();i++){
             radio2Box.getChildren().add(new RadioButton());
-            radio2Box.getChildren().get(i).setOnMouseClicked(event -> {   
-            });
-            
         }
         
-        radio2Box.setStyle("-fx-padding: 15;-fx-spacing: 10;");
+        radio2Box.setStyle("-fx-padding: 14;-fx-spacing: 10;-fx-border-style: solid");
+        radio2Box.getChildren().add(new RadioButton());
+        jeepBox.getChildren().add(new Text("Τζιπ"));
         for(int i =0;i<services.list.size();i++){
             jeepBox.getChildren().add(new Text(services.list.get(i).getPriceJeep().toString()));
         }
-        jeepBox.setStyle("-fx-padding: 15;-fx-spacing: 10;");
+        jeepBox.setStyle("-fx-padding: 17;-fx-spacing: 10;-fx-border-style: solid");
         
         VBox motoBox = new VBox();
-       
+        motoBox.getChildren().add(new Text("Μοτοσυκλέτα"));
         for(int i =0;i<services.list.size();i++){
             motoBox.getChildren().add(new Text(services.list.get(i).getPriceMoto().toString()));
         }
-        motoBox.setStyle("-fx-padding: 15;-fx-spacing: 10;");
+        motoBox.setStyle("-fx-padding: 15;-fx-spacing: 10;-fx-border-style: solid");
         VBox radio3Box = new VBox();
+        radio3Box.getChildren().add(new RadioButton());
         for(int i =0;i<services.list.size();i++){
             radio3Box.getChildren().add(new RadioButton());
-            radio3Box.getChildren().get(i).setOnMouseClicked(event -> {   
-            });
-            
         }
         
-        radio3Box.setStyle("-fx-padding: 15;-fx-spacing: 10;");
+        radio3Box.setStyle("-fx-padding: 14;-fx-spacing: 10;-fx-border-style: solid");
         HBox formBox = new HBox();
-
+        formBox.setAlignment(Pos.CENTER);
+        formBox.setPadding(new Insets(500));
 
         formBox.getChildren().addAll(servicesBox,carBox,radio1Box,jeepBox,radio2Box,motoBox,radio3Box);
         formBox.setStyle("-fx-border-style: dashed");
@@ -253,13 +284,8 @@ public class Client extends Application {
         stage.setMaxWidth(1920);
         stage.setMinHeight(768);
         stage.setMinWidth(1024);
-        VBox  secondaryLayout = new VBox();
-        secondaryLayout.getChildren().addAll(vehicleBox,formBox);
-        secondaryLayout.setAlignment(Pos.CENTER);
-        secondaryLayout.setPadding(new Insets(1000));
-        
 
-        Scene secondScene = new Scene(secondaryLayout, 1024, 768);
+        Scene secondScene = new Scene(formBox, 1024, 768);
     
         newWindow.setTitle("Second Stage");           
         newWindow.setScene(secondScene);           
@@ -273,7 +299,17 @@ public class Client extends Application {
         newWindow.setMinWidth(1024);
         stage.show();
 
+          
+        ObservableList rd1 =radio1Box.getChildren();
+        disableRadiobuttons(rd1);
+        ObservableList rd2 =radio2Box.getChildren();
+        disableRadiobuttons(rd2);
+        ObservableList rd3 =radio3Box.getChildren();
+        disableRadiobuttons(rd3);
 
+        radio1Box.getChildren().get(0).setOnMouseClicked(new SelectVehicle(rd1, rd2, rd3));
+        radio2Box.getChildren().get(0).setOnMouseClicked(new SelectVehicle(rd2, rd1, rd3));   
+        radio3Box.getChildren().get(0).setOnMouseClicked(new SelectVehicle(rd3, rd1, rd2));
 
         //try (Socket clientSocket = new Socket("localhost", 6666);
         //PrintWriter toServer = new PrintWriter(clientSocket.getOutputStream(), true);
