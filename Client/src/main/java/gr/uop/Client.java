@@ -3,6 +3,9 @@ package gr.uop;
 
 import java.io.PrintWriter;
 import java.net.Socket;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Map;
 import java.util.Scanner;
 import java.util.Set;
@@ -31,15 +34,158 @@ import javafx.scene.layout.Region;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
+import javafx.scene.text.TextAlignment;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import java.util.Date;
 
 /**
  * JavaFX App
  */
 public class Client extends Application {
     
+    Button submit = new Button("Submit");
+    Button cancel = new Button("Cancel");
+    Text timi = new Text("0");
+    Text keimeno = new Text("Τελική τιμή: ");
+    GridPane keyboardPane = new GridPane();
+    TreeMap<String,Button> buttonsMap = treeMapKeyboardCreate();
+    HBox sumBox = new HBox();
+    VBox main2Box = new VBox();
+    HBox formBox = new HBox();
+    VBox radio3Box = new VBox();
+    VBox motoBox = new VBox();
+    VBox jeepBox = new VBox();
+    VBox radio2Box = new VBox();
+    VBox radio1Box = new VBox();
+    VBox carBox = new VBox();
+    Stage newWindow = new Stage();
+    HBox nameHbox = new HBox();
+    TextField nameTextField  = new TextField();
+    VBox servicesBox = new VBox();
+    Services services = new Services();
+
+    private class SelectServices implements EventHandler<MouseEvent>{
+        ObservableList<RadioButton> rd ;
+        ObservableList<Text> times ;
+        Integer pos;
+        public SelectServices(ObservableList<RadioButton> rd,int pos,ObservableList<Text> times){
+            this.rd = rd;
+            this.pos = pos;
+            this.times = times;
+        }
+        @Override
+        public void handle(MouseEvent event) {
+                boolean check =  rd.get(pos).isSelected();
+                
+                
+                if(check){
+                    timi.setText(String.valueOf(Integer.parseInt(timi.getText()) + Integer.parseInt(times.get(pos).getText())));
+                    if(pos==1){
+                        
+                        for(int j =1 ; j< rd.size()-3;j++){
+                            if(j!=pos && j!=5 && j!=7){
+                                rd.get(j).setDisable(true);
+                                rd.get(j).setSelected(false);
+                            }
+                        }
+                    }
+                    else if(pos == 2){
+                        for(int j =1 ; j< rd.size()-3;j++){
+                            if(j!=pos && j!=4){
+                                rd.get(j).setDisable(true);
+                                rd.get(j).setSelected(false);
+                            }
+                        }
+                    }
+                    else if(pos == 4){
+                        for(int j =1 ; j< rd.size()-3;j++){
+                            if(j!=pos && j!=2 && j!=7){
+                                rd.get(j).setDisable(true);
+                                rd.get(j).setSelected(false);
+                            }
+                        }
+                    }
+
+                    else if(pos == 5){
+                        for(int j =1 ; j< rd.size()-3;j++){
+                            if(j!=pos && j!=1){
+                                rd.get(j).setDisable(true);
+                                rd.get(j).setSelected(false);
+                            }
+                        }
+                    }
+                    else if(pos == 6|| pos == 3){
+                        for(int j =1 ; j< rd.size()-3;j++){
+                            if(j!=pos){
+                                rd.get(j).setDisable(true);
+                            }
+                        }
+                    }
+                    else if(pos == 7){
+                        for(int j =1 ; j< rd.size()-3;j++){
+                            if(j!=pos && j!=1 && j!=4){
+                                rd.get(j).setDisable(true);
+                                rd.get(j).setSelected(false);
+                            }
+                        }
+                    }
+                }
+                else{
+                    timi.setText(String.valueOf(Integer.parseInt(timi.getText()) - Integer.parseInt(times.get(pos).getText())));
+                    if(pos==1){
+                        for(int j =1 ; j< rd.size()-3;j++){
+                            if(j!=pos && j!=5 && j!=7){
+                                rd.get(j).setDisable(false);
+                            }
+                        }
+                    }
+                    else if(pos == 2){
+                        for(int j =1 ; j< rd.size()-3;j++){
+                            if(j!=pos && j!=4){
+                                rd.get(j).setDisable(false);
+                            }
+                        }
+                    }
+                    
+                    else if(pos == 4){
+                        for(int j =1 ; j< rd.size()-3;j++){
+                            if(j!=pos && j!=2 && j!=7){
+                                rd.get(j).setDisable(false);
+                            }
+                        }
+                    }
+
+                    else if(pos == 5){
+                        for(int j =1 ; j< rd.size()-3;j++){
+                            if(j!=pos && j!=1){
+                                rd.get(j).setDisable(false);
+                            }
+                        }
+                    }
+
+                    else if(pos == 6|| pos == 3){
+                        for(int j =1 ; j< rd.size()-3;j++){
+                            if(j!=pos){
+                                rd.get(j).setDisable(false);
+                            }
+                        }
+                    }
+
+                    else if(pos == 7){
+                        for(int j =1 ; j< rd.size()-3;j++){
+                            if(j!=pos && j!=1 && j!=4){
+                                rd.get(j).setDisable(false);
+                            }
+                        }
+                    }
+                }
+
+            
+            
+        }
     
+    }
     private class SelectVehicle implements EventHandler<MouseEvent>{
         ObservableList<RadioButton> rd1 ;
         ObservableList<RadioButton> rd2 ;
@@ -51,9 +197,10 @@ public class Client extends Application {
         }
         @Override
         public void handle(MouseEvent event) {
-            
+            timi.setText("0");
             for(int i =1 ; i< rd1.size();i++){
                 rd1.get(i).setDisable(false);
+                rd1.get(i).setSelected(false);
             }
                 RadioButton a =  (RadioButton)rd2.get(0);
                 a.setSelected(false);
@@ -70,18 +217,29 @@ public class Client extends Application {
         }
     
     }
-    public static void SendClientInfo(Socket clientSocket ,PrintWriter toServer,Scanner fromServer,String customer){
-        Scanner keyboard = new Scanner(System.in);
-       
-            String line = keyboard.nextLine();
-            toServer.println(customer);
-            // toServer.flush();
+    private class SendClientInfo{
+            Socket clientSocket;
+            PrintWriter toServer;
+            Scanner fromServer; 
+            public SendClientInfo(Socket clientSocket ,PrintWriter toServer,Scanner fromServer){
+                this.clientSocket=clientSocket;
+                this.toServer = toServer;
+                this.fromServer = fromServer;
+            }
+
+            public void Send(String pinakida,String timi,String date){
+            toServer.println(pinakida);
+            toServer.println(timi);
+            System.out.print("sas");
+            //toServer.println(date);
+            toServer.flush();
             String response = fromServer.nextLine();
             System.out.println("Response: " + response);
-    }
+            }
+        }
     
     
-    
+ 
     public static TreeMap<String,Button> treeMapKeyboardCreate(){
         TreeMap buttonsMap = new TreeMap<String,Button>();
         
@@ -116,6 +274,7 @@ public class Client extends Application {
     public static void disableRadiobuttons(ObservableList<RadioButton> a){
         for(int i =1 ; i< a.size();i++){
             a.get(i).setDisable(true);
+            a.get(i).setSelected(false);
         }
     }
     public static void treemapToPane(TreeMap<String,Button> s1 , GridPane s2){
@@ -171,66 +330,59 @@ public class Client extends Application {
 
     @Override
     public void start(Stage stage) {
-        Stage newWindow = new Stage();
-        HBox nameHbox = new HBox();
-        TextField nameTextField  = new TextField();
-        VBox servicesBox = new VBox();
-        Services services = new Services();
+        
         servicesBox.getChildren().add(new Text("Τύπος Οχήματος"));
         for(int i =0;i<services.list.size();i++){
             servicesBox.getChildren().add(new Text(services.list.get(i).getName()));
         }
-
         servicesBox.setStyle("-fx-padding: 19;-fx-spacing: 10;-fx-border-style: solid");
-        VBox carBox = new VBox();
+
+
         carBox.getChildren().add(new Text("Αυτόκίνητο"));
         for(int i =0;i<services.list.size();i++){
             carBox.getChildren().add(new Text(services.list.get(i).getPriceCar().toString()));
         }
         carBox.setStyle("-fx-padding: 17;-fx-spacing: 10;-fx-border-style: solid");
 
-        VBox radio1Box = new VBox();
+       
         radio1Box.getChildren().add(new RadioButton());
         for(int i =0;i<services.list.size();i++){
             radio1Box.getChildren().add(new RadioButton());
         }
-        
         radio1Box.setStyle("-fx-padding: 14;-fx-spacing: 10;-fx-border-style: solid");
 
-        VBox jeepBox = new VBox();
-        VBox radio2Box = new VBox();
-
+        
+        radio2Box.getChildren().add(new RadioButton());
         for(int i =0;i<services.list.size();i++){
             radio2Box.getChildren().add(new RadioButton());
         }
-        
         radio2Box.setStyle("-fx-padding: 14;-fx-spacing: 10;-fx-border-style: solid");
-        radio2Box.getChildren().add(new RadioButton());
+
         jeepBox.getChildren().add(new Text("Τζιπ"));
         for(int i =0;i<services.list.size();i++){
             jeepBox.getChildren().add(new Text(services.list.get(i).getPriceJeep().toString()));
         }
         jeepBox.setStyle("-fx-padding: 17;-fx-spacing: 10;-fx-border-style: solid");
         
-        VBox motoBox = new VBox();
+        
         motoBox.getChildren().add(new Text("Μοτοσυκλέτα"));
         for(int i =0;i<services.list.size();i++){
             motoBox.getChildren().add(new Text(services.list.get(i).getPriceMoto().toString()));
         }
         motoBox.setStyle("-fx-padding: 15;-fx-spacing: 10;-fx-border-style: solid");
-        VBox radio3Box = new VBox();
+        
         radio3Box.getChildren().add(new RadioButton());
         for(int i =0;i<services.list.size();i++){
             radio3Box.getChildren().add(new RadioButton());
         }
-        
         radio3Box.setStyle("-fx-padding: 14;-fx-spacing: 10;-fx-border-style: solid");
-        HBox formBox = new HBox();
+        
         formBox.setAlignment(Pos.CENTER);
-        formBox.setPadding(new Insets(500));
-
         formBox.getChildren().addAll(servicesBox,carBox,radio1Box,jeepBox,radio2Box,motoBox,radio3Box);
-        formBox.setStyle("-fx-border-style: dashed");
+        
+        sumBox.getChildren().addAll(keimeno,timi);
+
+
 
         nameTextField.setPrefWidth(600);
         nameTextField.setPrefHeight(40);
@@ -238,13 +390,12 @@ public class Client extends Application {
         nameHbox.getChildren().addAll(nameTextField);
         nameHbox.setAlignment(Pos.CENTER);
         nameHbox.setSpacing(10);
-        HBox.setMargin(nameHbox, new Insets(1000));
-        GridPane keyboardPane = new GridPane();
+        
         keyboardPane.setAlignment(Pos.BOTTOM_CENTER);
         keyboardPane.setPadding(new Insets(100,100,100,100));
 		keyboardPane.setHgap(5);
 		keyboardPane.setVgap(5);
-        TreeMap<String,Button> buttonsMap = treeMapKeyboardCreate();
+        
         treemapToPane(buttonsMap, keyboardPane);
         for (Map.Entry<String, Button> entry : buttonsMap.entrySet()){
             Button tmp  = entry.getValue();
@@ -284,8 +435,19 @@ public class Client extends Application {
         stage.setMaxWidth(1920);
         stage.setMinHeight(768);
         stage.setMinWidth(1024);
-
-        Scene secondScene = new Scene(formBox, 1024, 768);
+        sumBox.setAlignment(Pos.CENTER);
+        sumBox.setSpacing(10);
+        main2Box.getChildren().addAll(formBox,sumBox,submit,cancel);
+        main2Box.setAlignment(Pos.CENTER);
+        main2Box.setPadding(new Insets(500));
+        sumBox.setStyle("-fx-font-size:40px;");
+        sumBox.setPadding(new Insets(10));
+        main2Box.setSpacing(10);
+        submit.setMinWidth(150);
+        submit.setStyle("-fx-background-radius: 5em;-fx-background-color:green;");
+        cancel.setStyle("-fx-background-radius: 5em;-fx-background-color:red");
+        cancel.setMinWidth(150);
+        Scene secondScene = new Scene(main2Box, 1024, 768);
     
         newWindow.setTitle("Second Stage");           
         newWindow.setScene(secondScene);           
@@ -306,22 +468,69 @@ public class Client extends Application {
         disableRadiobuttons(rd2);
         ObservableList rd3 =radio3Box.getChildren();
         disableRadiobuttons(rd3);
+        ObservableList cars = carBox.getChildren();
+        ObservableList jeeps = jeepBox.getChildren();
+        ObservableList motos = motoBox.getChildren();
 
+        
+        cancel.setOnMouseClicked(e -> {
+            timi.setText("0");
+            RadioButton a =(RadioButton) rd1.get(0);
+            RadioButton b =(RadioButton) rd2.get(0);
+            RadioButton c =(RadioButton) rd3.get(0);
+            a.setSelected(false);
+            b.setSelected(false);
+            c.setSelected(false);
+            disableRadiobuttons(rd1);
+            disableRadiobuttons(rd2);
+            disableRadiobuttons(rd3);
+            newWindow.close();
+        });
         radio1Box.getChildren().get(0).setOnMouseClicked(new SelectVehicle(rd1, rd2, rd3));
         radio2Box.getChildren().get(0).setOnMouseClicked(new SelectVehicle(rd2, rd1, rd3));   
         radio3Box.getChildren().get(0).setOnMouseClicked(new SelectVehicle(rd3, rd1, rd2));
-
-        //try (Socket clientSocket = new Socket("localhost", 6666);
-        //PrintWriter toServer = new PrintWriter(clientSocket.getOutputStream(), true);
-        //Scanner fromServer = new Scanner(clientSocket.getInputStream())) {
-        //    SendClientInfo(clientSocket, toServer, fromServer,"160");
-        //}
-        // catch (Exception e) {
-        //    System.out.println(e);       
-        //}
-        
+        for ( int i =1;i<radio1Box.getChildren().size();i++){
+            radio1Box.getChildren().get(i).setOnMouseClicked(new SelectServices(rd1,i,cars));
+        }
+        for ( int i =1;i<radio2Box.getChildren().size();i++){
+            radio2Box.getChildren().get(i).setOnMouseClicked(new SelectServices(rd2,i,jeeps));
+        }
+        for ( int i =1;i<radio3Box.getChildren().size();i++){
+            radio3Box.getChildren().get(i).setOnMouseClicked(new SelectServices(rd3,i,motos));
+        }
+        DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
+        Date date = new Date();
+        submit.setOnAction(event ->{
+            try (Socket clientSocket = new Socket("localhost", 6666))
+            {
+            
+            PrintWriter toServer = new PrintWriter(clientSocket.getOutputStream(), true);
+            Scanner fromServer = new Scanner(clientSocket.getInputStream());
+            toServer.println(nameTextField.getText());
+            toServer.println(timi.getText());
+            System.out.print("sas");
+            toServer.println(date);
+            toServer.flush();
+            timi.setText("0");
+            RadioButton a =(RadioButton) rd1.get(0);
+            RadioButton b =(RadioButton) rd2.get(0);
+            RadioButton c =(RadioButton) rd3.get(0);
+            a.setSelected(false);
+            b.setSelected(false);
+            c.setSelected(false);
+            disableRadiobuttons(rd1);
+            disableRadiobuttons(rd2);
+            disableRadiobuttons(rd3);
+            nameTextField.setText("");
+            newWindow.close();
+            }
+            catch (Exception e) {
+                System.out.println(e);       
+            }
+            
+        }
+        );    
     }
-   
     public static void main(String[] args) {
         launch(args);
     }
