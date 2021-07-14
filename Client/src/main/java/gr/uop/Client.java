@@ -43,7 +43,8 @@ import java.util.Date;
  * JavaFX App
  */
 public class Client extends Application {
-    
+    PrintWriter toServer ;
+    Scanner fromServer ;
     Button submit = new Button("Submit");
     Button cancel = new Button("Cancel");
     Text timi = new Text("0");
@@ -133,51 +134,10 @@ public class Client extends Application {
                 }
                 else{
                     timi.setText(String.valueOf(Integer.parseInt(timi.getText()) - Integer.parseInt(times.get(pos).getText())));
-                    if(pos==1){
-                        for(int j =1 ; j< rd.size()-3;j++){
-                            if(j!=pos && j!=5 && j!=7){
-                                rd.get(j).setDisable(false);
-                            }
-                        }
-                    }
-                    else if(pos == 2){
-                        for(int j =1 ; j< rd.size()-3;j++){
-                            if(j!=pos && j!=4){
-                                rd.get(j).setDisable(false);
-                            }
-                        }
-                    }
-                    
-                    else if(pos == 4){
-                        for(int j =1 ; j< rd.size()-3;j++){
-                            if(j!=pos && j!=2 && j!=7){
-                                rd.get(j).setDisable(false);
-                            }
-                        }
-                    }
-
-                    else if(pos == 5){
-                        for(int j =1 ; j< rd.size()-3;j++){
-                            if(j!=pos && j!=1){
-                                rd.get(j).setDisable(false);
-                            }
-                        }
-                    }
-
-                    else if(pos == 6|| pos == 3){
-                        for(int j =1 ; j< rd.size()-3;j++){
-                            if(j!=pos){
-                                rd.get(j).setDisable(false);
-                            }
-                        }
-                    }
-
-                    else if(pos == 7){
-                        for(int j =1 ; j< rd.size()-3;j++){
-                            if(j!=pos && j!=1 && j!=4){
-                                rd.get(j).setDisable(false);
-                            }
-                        }
+                    for(int j =1 ; j< rd.size();j++){
+                            rd.get(j).setDisable(false);
+                            rd.get(j).setSelected(false);
+                            timi.setText("0");
                     }
                 }
 
@@ -217,26 +177,7 @@ public class Client extends Application {
         }
     
     }
-    private class SendClientInfo{
-            Socket clientSocket;
-            PrintWriter toServer;
-            Scanner fromServer; 
-            public SendClientInfo(Socket clientSocket ,PrintWriter toServer,Scanner fromServer){
-                this.clientSocket=clientSocket;
-                this.toServer = toServer;
-                this.fromServer = fromServer;
-            }
-
-            public void Send(String pinakida,String timi,String date){
-            toServer.println(pinakida);
-            toServer.println(timi);
-            System.out.print("sas");
-            //toServer.println(date);
-            toServer.flush();
-            String response = fromServer.nextLine();
-            System.out.println("Response: " + response);
-            }
-        }
+    
     
     
  
@@ -409,7 +350,7 @@ public class Client extends Application {
                         Alert alert = new Alert(Alert.AlertType.ERROR);
                         //Setting the title
                         alert.setTitle("Alert");
-                        alert.setContentText("Please give correct input(at least two characters)");
+                        alert.setContentText("Παρακαλώ δώστε τουλάχιστον δυο χαρακτήρες");
                         alert.show();    
                     }
                 else{
@@ -437,12 +378,13 @@ public class Client extends Application {
         stage.setMinWidth(1024);
         sumBox.setAlignment(Pos.CENTER);
         sumBox.setSpacing(10);
+        main2Box.setSpacing(10);
         main2Box.getChildren().addAll(formBox,sumBox,submit,cancel);
         main2Box.setAlignment(Pos.CENTER);
         main2Box.setPadding(new Insets(500));
         sumBox.setStyle("-fx-font-size:40px;");
         sumBox.setPadding(new Insets(10));
-        main2Box.setSpacing(10);
+                
         submit.setMinWidth(150);
         submit.setStyle("-fx-background-radius: 5em;-fx-background-color:green;");
         cancel.setStyle("-fx-background-radius: 5em;-fx-background-color:red");
@@ -500,37 +442,37 @@ public class Client extends Application {
         }
         DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
         Date date = new Date();
-        submit.setOnAction(event ->{
-            try (Socket clientSocket = new Socket("localhost", 6666))
-            {
-            
+        
+        
+        try 
+        {
+            Socket clientSocket = new Socket("localhost", 6666);
             PrintWriter toServer = new PrintWriter(clientSocket.getOutputStream(), true);
             Scanner fromServer = new Scanner(clientSocket.getInputStream());
-            toServer.println(nameTextField.getText());
-            toServer.println(timi.getText());
-            System.out.print("sas");
-            toServer.println(date);
-            toServer.flush();
-            timi.setText("0");
-            RadioButton a =(RadioButton) rd1.get(0);
-            RadioButton b =(RadioButton) rd2.get(0);
-            RadioButton c =(RadioButton) rd3.get(0);
-            a.setSelected(false);
-            b.setSelected(false);
-            c.setSelected(false);
-            disableRadiobuttons(rd1);
-            disableRadiobuttons(rd2);
-            disableRadiobuttons(rd3);
-            nameTextField.setText("");
-            newWindow.close();
-            }
-            catch (Exception e) {
-                System.out.println(e);       
-            }
-            
+
+            submit.setOnAction(event ->{
+                toServer.println(nameTextField.getText()+" "+timi.getText()+" "+dateFormat.format(date));
+                toServer.flush();
+                timi.setText("0");
+                RadioButton a =(RadioButton) rd1.get(0);
+                RadioButton b =(RadioButton) rd2.get(0);
+                RadioButton c =(RadioButton) rd3.get(0);
+                a.setSelected(false);
+                b.setSelected(false);
+                c.setSelected(false);
+                disableRadiobuttons(rd1);
+                disableRadiobuttons(rd2);
+                disableRadiobuttons(rd3);
+                nameTextField.setText("");
+                newWindow.close();
+                });
         }
-        );    
+        catch (Exception e) {
+            System.out.println(e);       
+        }
+            
     }
+            
     public static void main(String[] args) {
         launch(args);
     }
