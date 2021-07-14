@@ -3,8 +3,8 @@ package gr.uop;
 import java.util.ArrayList;
 
 public class Services {
-    ArrayList<Product> list;
-    Integer size ;
+    private ArrayList<Product> list;
+    private Integer size ;
     public Services(){
         this.list = new ArrayList<Product>();
         this.list.add(new Product("Πλύσιμο εξωτερικό", 1, 7, 8, 6));

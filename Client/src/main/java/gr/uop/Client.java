@@ -66,121 +66,7 @@ public class Client extends Application {
     VBox servicesBox = new VBox();
     Services services = new Services();
 
-    private class SelectServices implements EventHandler<MouseEvent>{
-        ObservableList<RadioButton> rd ;
-        ObservableList<Text> times ;
-        Integer pos;
-        public SelectServices(ObservableList<RadioButton> rd,int pos,ObservableList<Text> times){
-            this.rd = rd;
-            this.pos = pos;
-            this.times = times;
-        }
-        @Override
-        public void handle(MouseEvent event) {
-                boolean check =  rd.get(pos).isSelected();
-                
-                
-                if(check){
-                    timi.setText(String.valueOf(Integer.parseInt(timi.getText()) + Integer.parseInt(times.get(pos).getText())));
-                    if(pos==1){
-                        
-                        for(int j =1 ; j< rd.size()-3;j++){
-                            if(j!=pos && j!=5 && j!=7){
-                                rd.get(j).setDisable(true);
-                                rd.get(j).setSelected(false);
-                            }
-                        }
-                    }
-                    else if(pos == 2){
-                        for(int j =1 ; j< rd.size()-3;j++){
-                            if(j!=pos && j!=4){
-                                rd.get(j).setDisable(true);
-                                rd.get(j).setSelected(false);
-                            }
-                        }
-                    }
-                    else if(pos == 4){
-                        for(int j =1 ; j< rd.size()-3;j++){
-                            if(j!=pos && j!=2 && j!=7){
-                                rd.get(j).setDisable(true);
-                                rd.get(j).setSelected(false);
-                            }
-                        }
-                    }
 
-                    else if(pos == 5){
-                        for(int j =1 ; j< rd.size()-3;j++){
-                            if(j!=pos && j!=1){
-                                rd.get(j).setDisable(true);
-                                rd.get(j).setSelected(false);
-                            }
-                        }
-                    }
-                    else if(pos == 6|| pos == 3){
-                        for(int j =1 ; j< rd.size()-3;j++){
-                            if(j!=pos){
-                                rd.get(j).setDisable(true);
-                            }
-                        }
-                    }
-                    else if(pos == 7){
-                        for(int j =1 ; j< rd.size()-3;j++){
-                            if(j!=pos && j!=1 && j!=4){
-                                rd.get(j).setDisable(true);
-                                rd.get(j).setSelected(false);
-                            }
-                        }
-                    }
-                }
-                else{
-                    timi.setText(String.valueOf(Integer.parseInt(timi.getText()) - Integer.parseInt(times.get(pos).getText())));
-                    for(int j =1 ; j< rd.size();j++){
-                            rd.get(j).setDisable(false);
-                            rd.get(j).setSelected(false);
-                            timi.setText("0");
-                    }
-                }
-
-            
-            
-        }
-    
-    }
-    private class SelectVehicle implements EventHandler<MouseEvent>{
-        ObservableList<RadioButton> rd1 ;
-        ObservableList<RadioButton> rd2 ;
-        ObservableList<RadioButton> rd3 ;
-        public SelectVehicle(ObservableList<RadioButton> rd1 ,ObservableList<RadioButton> rd2,ObservableList<RadioButton> rd3){
-            this.rd1 = rd1;
-            this.rd2 = rd2;
-            this.rd3 = rd3;
-        }
-        @Override
-        public void handle(MouseEvent event) {
-            timi.setText("0");
-            for(int i =1 ; i< rd1.size();i++){
-                rd1.get(i).setDisable(false);
-                rd1.get(i).setSelected(false);
-            }
-                RadioButton a =  (RadioButton)rd2.get(0);
-                a.setSelected(false);
-                for(int i =1 ; i< rd2.size();i++){
-                    rd2.get(i).setSelected(false);
-                    rd2.get(i).setDisable(true);
-                }
-                a =  (RadioButton) rd3.get(0);
-                a.setSelected(false);
-                for(int i =1 ; i< rd3.size();i++){
-                    rd2.get(i).setSelected(false);
-                    rd3.get(i).setDisable(true);
-                }
-        }
-    
-    }
-    
-    
-    
- 
     public static TreeMap<String,Button> treeMapKeyboardCreate(){
         TreeMap buttonsMap = new TreeMap<String,Button>();
         
@@ -263,7 +149,6 @@ public class Client extends Application {
         //Fourth row of keyboard
         s2.add((Button)s1.get("0"),14,3);
         s2.add((Button)s1.get("Space"),0,3,10,1);
-       
     }
 
 
@@ -273,47 +158,47 @@ public class Client extends Application {
     public void start(Stage stage) {
         
         servicesBox.getChildren().add(new Text("Τύπος Οχήματος"));
-        for(int i =0;i<services.list.size();i++){
-            servicesBox.getChildren().add(new Text(services.list.get(i).getName()));
+        for(int i =0;i<services.getList().size();i++){
+            servicesBox.getChildren().add(new Text(services.getList().get(i).getName()));
         }
         servicesBox.setStyle("-fx-padding: 19;-fx-spacing: 10;-fx-border-style: solid");
 
 
         carBox.getChildren().add(new Text("Αυτόκίνητο"));
-        for(int i =0;i<services.list.size();i++){
-            carBox.getChildren().add(new Text(services.list.get(i).getPriceCar().toString()));
+        for(int i =0;i<services.getList().size();i++){
+            carBox.getChildren().add(new Text(services.getList().get(i).getPriceCar().toString()));
         }
         carBox.setStyle("-fx-padding: 17;-fx-spacing: 10;-fx-border-style: solid");
 
        
         radio1Box.getChildren().add(new RadioButton());
-        for(int i =0;i<services.list.size();i++){
+        for(int i =0;i<services.getList().size();i++){
             radio1Box.getChildren().add(new RadioButton());
         }
         radio1Box.setStyle("-fx-padding: 14;-fx-spacing: 10;-fx-border-style: solid");
 
         
         radio2Box.getChildren().add(new RadioButton());
-        for(int i =0;i<services.list.size();i++){
+        for(int i =0;i<services.getList().size();i++){
             radio2Box.getChildren().add(new RadioButton());
         }
         radio2Box.setStyle("-fx-padding: 14;-fx-spacing: 10;-fx-border-style: solid");
 
         jeepBox.getChildren().add(new Text("Τζιπ"));
-        for(int i =0;i<services.list.size();i++){
-            jeepBox.getChildren().add(new Text(services.list.get(i).getPriceJeep().toString()));
+        for(int i =0;i<services.getList().size();i++){
+            jeepBox.getChildren().add(new Text(services.getList().get(i).getPriceJeep().toString()));
         }
         jeepBox.setStyle("-fx-padding: 17;-fx-spacing: 10;-fx-border-style: solid");
         
         
         motoBox.getChildren().add(new Text("Μοτοσυκλέτα"));
-        for(int i =0;i<services.list.size();i++){
-            motoBox.getChildren().add(new Text(services.list.get(i).getPriceMoto().toString()));
+        for(int i =0;i<services.getList().size();i++){
+            motoBox.getChildren().add(new Text(services.getList().get(i).getPriceMoto().toString()));
         }
         motoBox.setStyle("-fx-padding: 15;-fx-spacing: 10;-fx-border-style: solid");
         
         radio3Box.getChildren().add(new RadioButton());
-        for(int i =0;i<services.list.size();i++){
+        for(int i =0;i<services.getList().size();i++){
             radio3Box.getChildren().add(new RadioButton());
         }
         radio3Box.setStyle("-fx-padding: 14;-fx-spacing: 10;-fx-border-style: solid");
@@ -340,35 +225,7 @@ public class Client extends Application {
         treemapToPane(buttonsMap, keyboardPane);
         for (Map.Entry<String, Button> entry : buttonsMap.entrySet()){
             Button tmp  = entry.getValue();
-            
-            tmp.setOnMouseClicked(event -> {
-                String txt =nameTextField.getText();
-                String s = tmp.getText();
-                if(s == "Enter"){
-                    String txt2 = txt.trim();
-                    if(txt2.length()<2){
-                        Alert alert = new Alert(Alert.AlertType.ERROR);
-                        //Setting the title
-                        alert.setTitle("Alert");
-                        alert.setContentText("Παρακαλώ δώστε τουλάχιστον δυο χαρακτήρες");
-                        alert.show();    
-                    }
-                else{
-                    newWindow.show();
-                }
-                }
-                else if(s == "BackSpace"){
-                    if(txt.length()>0){
-                        nameTextField.setText(txt.substring(0,txt.length()-1));
-                    }
-                }
-                else if(s == "Space"){
-                    nameTextField.setText(txt + " ");
-                }
-                else{
-                nameTextField.setText(txt + tmp.getText());
-                }
-            });
+            tmp.setOnMouseClicked(new KeyBoardEvent(nameTextField,tmp,newWindow));
         }
         Scene scene = new Scene(new StackPane(nameHbox,keyboardPane), 1024, 768);
         stage.setScene(scene);
@@ -414,31 +271,20 @@ public class Client extends Application {
         ObservableList jeeps = jeepBox.getChildren();
         ObservableList motos = motoBox.getChildren();
 
+        ArrayList<String> selectedServices= new ArrayList<String>();
+        cancel.setOnMouseClicked(new CancelEvent(rd1, rd2, rd3, timi, newWindow));
         
-        cancel.setOnMouseClicked(e -> {
-            timi.setText("0");
-            RadioButton a =(RadioButton) rd1.get(0);
-            RadioButton b =(RadioButton) rd2.get(0);
-            RadioButton c =(RadioButton) rd3.get(0);
-            a.setSelected(false);
-            b.setSelected(false);
-            c.setSelected(false);
-            disableRadiobuttons(rd1);
-            disableRadiobuttons(rd2);
-            disableRadiobuttons(rd3);
-            newWindow.close();
-        });
-        radio1Box.getChildren().get(0).setOnMouseClicked(new SelectVehicle(rd1, rd2, rd3));
-        radio2Box.getChildren().get(0).setOnMouseClicked(new SelectVehicle(rd2, rd1, rd3));   
-        radio3Box.getChildren().get(0).setOnMouseClicked(new SelectVehicle(rd3, rd1, rd2));
+        radio1Box.getChildren().get(0).setOnMouseClicked(new SelectVehicle(rd1, rd2, rd3,timi));
+        radio2Box.getChildren().get(0).setOnMouseClicked(new SelectVehicle(rd2, rd1, rd3,timi));   
+        radio3Box.getChildren().get(0).setOnMouseClicked(new SelectVehicle(rd3, rd1, rd2,timi));
         for ( int i =1;i<radio1Box.getChildren().size();i++){
-            radio1Box.getChildren().get(i).setOnMouseClicked(new SelectServices(rd1,i,cars));
+            radio1Box.getChildren().get(i).setOnMouseClicked(new SelectServices(rd1,i,cars,timi,selectedServices));
         }
         for ( int i =1;i<radio2Box.getChildren().size();i++){
-            radio2Box.getChildren().get(i).setOnMouseClicked(new SelectServices(rd2,i,jeeps));
+            radio2Box.getChildren().get(i).setOnMouseClicked(new SelectServices(rd2,i,jeeps,timi,selectedServices));
         }
         for ( int i =1;i<radio3Box.getChildren().size();i++){
-            radio3Box.getChildren().get(i).setOnMouseClicked(new SelectServices(rd3,i,motos));
+            radio3Box.getChildren().get(i).setOnMouseClicked(new SelectServices(rd3,i,motos,timi,selectedServices));
         }
         DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
         Date date = new Date();
@@ -451,9 +297,38 @@ public class Client extends Application {
             Scanner fromServer = new Scanner(clientSocket.getInputStream());
 
             submit.setOnAction(event ->{
-                toServer.println(nameTextField.getText()+" "+timi.getText()+" "+dateFormat.format(date));
+                if(Integer.valueOf(timi.getText())>0){
+                String services="";
+                Services temp = new Services();
+                RadioButton a =  (RadioButton)radio1Box.getChildren().get(0);
+                if(a.isSelected()){
+                    services+="Αυτοκίνητο;";
+                }
+                RadioButton b =  (RadioButton)radio2Box.getChildren().get(0);
+                if(b.isSelected()){
+                    services+="Τζίπ;";
+                }
+                RadioButton c =  (RadioButton)radio3Box.getChildren().get(0);
+                if(c.isSelected()){
+                    services+="Μοτοσυκλέτα;";
+                }
+                for(String s : selectedServices ){
+                    if(a.isSelected()){
+                        services += temp.getList().get(Integer.valueOf(s)-1).getName()+";"+ temp.getList().get(Integer.valueOf(s)-1).getPriceCar()+";";
+                    }
+                    else if(b.isSelected()){
+                        services += temp.getList().get(Integer.valueOf(s)-1).getName()+";"+ temp.getList().get(Integer.valueOf(s)-1).getPriceJeep()+";";
+                    }
+                    else if(c.isSelected()){
+                        services += temp.getList().get(Integer.valueOf(s)-1).getName()+";"+ temp.getList().get(Integer.valueOf(s)-1).getPriceMoto()+";";
+                    }
+                    
+                }
+                toServer.println(nameTextField.getText()+";"+timi.getText()+";"+dateFormat.format(date)+";"+services);
                 toServer.flush();
                 timi.setText("0");
+                }
+                selectedServices.clear();
                 RadioButton a =(RadioButton) rd1.get(0);
                 RadioButton b =(RadioButton) rd2.get(0);
                 RadioButton c =(RadioButton) rd3.get(0);
