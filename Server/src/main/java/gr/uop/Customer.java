@@ -15,18 +15,7 @@ public class Customer implements Serializable{
         this.date = date;
         this.services = services;
     }
-    public Customer(String pinakida,String date,String services){
-        this.pinakida = pinakida;
-        this.date = date;
-        this.services = services;
-    }
-    public Customer(String pinakida,Integer price,String date,String departureDate,String services){
-        this.pinakida = pinakida;
-        this.price = price;
-        this.date = date;
-        this.departureDate = departureDate;
-        this.services = services;
-    }
+    
     public Integer getPrice(){
         return  this.price;
     }
