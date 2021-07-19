@@ -25,6 +25,9 @@ import javafx.scene.text.Text;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import java.util.Date;
+
+//Κλάση που χειρίζεται την αποστολή δεδόμενων στο server και κάνει της ανάλογες αλλαγές στο gui
+//και τέλος στέλνει τα δεδομένα στο server καλώντας την εντολή Client.submit(line);
 public class SubmitEvent implements EventHandler<MouseEvent>{
     Gui a;
     public SubmitEvent(Gui a){

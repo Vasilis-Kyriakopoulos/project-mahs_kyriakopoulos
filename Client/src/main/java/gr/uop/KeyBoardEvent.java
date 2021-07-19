@@ -7,6 +7,8 @@ import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 
+
+//Σε αυτή την κλάση χειριζόμαστε την  λειτουργικότητα του πληκτρολογίου
 public class KeyBoardEvent implements EventHandler<MouseEvent>{
     TextField nameTextField;
     Button tmp;

@@ -13,6 +13,10 @@ import javafx.scene.control.ButtonType;
 import javafx.scene.control.TableView;
 import javafx.scene.input.MouseEvent;
 
+
+//Στην κλάση αυτή χειριζόμαστε την περίπτωση που γίνει delete απο το tableview και συνεπώς διαγραφή 
+//της προσωρινής εγγραφής στο αρχείο.
+
 public class DeleteEvent implements EventHandler<MouseEvent> {
     TableView tableView;
     public DeleteEvent(TableView tableView){

@@ -1,7 +1,8 @@
 package gr.uop;
 
 import java.util.ArrayList;
-
+//Μία κλάση θα αποθηκεύει, σε μια δομή δεδομένων , τα στοι‐
+///χεία των διαθέσιμων υπηρεσιών της επιχείρησης.
 public class Services {
     private ArrayList<Product> list;
     private Integer size ;

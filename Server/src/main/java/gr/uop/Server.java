@@ -42,9 +42,7 @@ public class Server extends Application {
             }
         };
     t.start();
-    stage.setOnCloseRequest(event -> {
-      System.exit(0);
-    });
+    
         
     }
 

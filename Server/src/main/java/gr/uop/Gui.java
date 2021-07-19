@@ -2,14 +2,18 @@ package gr.uop;
 
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
+
+//Κλάση αναπαράστασης του διεπαφής.
 public class Gui {
     private Button payButton = new Button("Πληρωμή");
     private Button deleteButton = new Button("Διαγραφή");
@@ -21,6 +25,8 @@ public class Gui {
     public Gui(Stage stage){
         this.stage = stage;
     }
+
+    //Ετοιμάζει το gui και το εμφανίζει
     public void prepareGuiAndShow(){
         TableColumn<Customer,String> column1 = new TableColumn<>("Πινακίδα");
         column1.setCellValueFactory(new PropertyValueFactory<>("pinakida"));
@@ -55,10 +61,26 @@ public class Gui {
         setEvents();
         stage.show();
     } 
+
+    //Θέτει τα events στα κουμπία της εφαρμογής.
     private void setEvents(){
+
         payButton.setOnMouseClicked(new PayEvent(tableView));
         deleteButton.setOnMouseClicked(new DeleteEvent(tableView));
+        stage.setOnCloseRequest(event -> {
+            
+            if(tableView.getItems().size()>0){
+                event.consume();
+                Alert alert = new Alert(AlertType.INFORMATION);
+                alert.setContentText("Υπάρχουν ακόμα καταχωρήσεις στον πίνακα!!!");
+                alert.show();
+            }
+            else{
+            System.exit(0);
+            }
+          });
     }
+    //Προσθέτει μια εγγραφή στο tableview.
     public void setTableView(Customer a){
         tableView.getItems().add(a);
     }

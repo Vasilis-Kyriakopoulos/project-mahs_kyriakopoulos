@@ -6,6 +6,7 @@ import javafx.scene.control.RadioButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.text.Text;
 
+//Σε αυτή την κλάση χειριζόμαστε την επιλογή του οχήματος και εφαρμόζουμε τους κατάλληλους περιορισμούς.
 public class SelectVehicle implements EventHandler<MouseEvent>{
     ObservableList<RadioButton> rd1 ;
     ObservableList<RadioButton> rd2 ;

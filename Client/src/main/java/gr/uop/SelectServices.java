@@ -10,6 +10,8 @@ import javafx.scene.control.RadioButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.text.Text;
 
+
+//Σε αυτή την κλάση χειριζόμαστε τους περιοσμούς για την επιλογή των υπηρεσιών.
 public class SelectServices implements EventHandler<MouseEvent>{
     ObservableList<RadioButton> rd ;
     ObservableList<Text> times ;

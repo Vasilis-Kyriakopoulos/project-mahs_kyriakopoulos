@@ -54,6 +54,8 @@ public class Gui {
     public Gui(Stage stage){
         this.stage = stage;
     }
+      //Εδώ φροντίζει η συνάρτηση να κάνει τις κατάλληλες ενέργειες για να στείλει τα δεδομένα που πρέπει 
+    //στον server και επιστρέφει σαν String αυτό που πρέπει να στείλει στον server
 
     public String submit(){
         DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
@@ -111,6 +113,9 @@ public class Gui {
             return line;
             
     }
+
+    //Θέτει τα events της εφάρμογης στα καταλληλα κουμπιά
+    //
     private void setEvents(){
         treemapToPane(buttonsMap, keyboardPane);
         for (Map.Entry<String, Button> entry : buttonsMap.entrySet()){
@@ -145,6 +150,7 @@ public class Gui {
         }
     }
 
+    //Ετοιμάζει το gui και της παράμετρους για την σώστη εμφάνιση του και το εμφανίζει
     public void prepareGuiAndShow(){
         servicesBox.getChildren().add(new Text("Τύπος Οχήματος"));
         for(int i =0;i<services.getList().size();i++){
@@ -236,6 +242,10 @@ public class Gui {
         stage.show();
     }
 
+
+
+    //Προσθέτει στον GridPane που είναι το πληκτρολόγιο τα κατάλληλα κουμπιά που βρισκόνται στην δομή 
+    //TreeMap
     private  void treemapToPane(TreeMap<String,Button> s1 , GridPane s2){
         //First row of keyboard
         s2.add((Button)s1.get("Q"),0,0);
@@ -283,12 +293,16 @@ public class Gui {
         s2.add((Button)s1.get("Space"),0,3,10,1);
     }
 
+
+    //Κανει disable ολα τα radio buttons εκτός απο τα πρώτα της κάθε στήλης που είναι η επιλογή κατηγορίας.
     private  void disableRadiobuttons(ObservableList<RadioButton> a){
         for(int i =1 ; i< a.size();i++){
             a.get(i).setDisable(true);
             a.get(i).setSelected(false);
         }
     }
+
+    //Σε αυτή την συνάρτηση γέμιζει μια δομή treemap με τα κουμπία του πληκτρολόγιού.
     private  TreeMap<String,Button> treeMapKeyboardCreate(){
         TreeMap buttonsMap = new TreeMap<String,Button>();
         

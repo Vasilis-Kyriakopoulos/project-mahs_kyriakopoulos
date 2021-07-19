@@ -7,6 +7,10 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
+
+//Σε αυτή την κλάση χειριζόμαστε την περίπτωση που ο χρήστης πατήσει cancel στην επιλογή των υπηρεσιών
+// και εδώ γίνονται οι κατάλληλες ενέργειες για την επιστροφή στην αρχική οθόνη.
+
 public class CancelEvent implements  EventHandler<MouseEvent>{
     ObservableList<RadioButton> rd1 ;
     ObservableList<RadioButton> rd2 ;

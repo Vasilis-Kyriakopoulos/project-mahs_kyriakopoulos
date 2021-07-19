@@ -62,6 +62,7 @@ public class Client extends Application {
         }
             
     }
+    //Η συνάρτηση αυτή στέλνει τα δεδομένα στον server 
     public static void submit(String line){
         toServer.println(line);
         toServer.flush();

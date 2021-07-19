@@ -1,5 +1,8 @@
 package gr.uop;
 
+
+
+
 public class Product {
     private String name;
     private Integer id;

@@ -2,6 +2,8 @@ package gr.uop;
 
 import java.io.Serializable;
 
+//Κλάση που αναπαριστά τα δεδόμενα ενός πελάτη και βοηθά την εμφάνιση στο tableview.
+
 public class Customer implements Serializable{
     private Integer price;
     private String pinakida;

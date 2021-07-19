@@ -16,6 +16,10 @@ import javafx.scene.control.ButtonType;
 import javafx.scene.control.TableView;
 import javafx.scene.input.MouseEvent;
 
+
+//Στην κλάση αυτή χειριζόμαστε την περίπτωση που γίνει η πληρωμή και άρα πρέπει να διαγράψουμε απο το 
+//tableview την εγγραφή και να πάμε στο αρχείο και να συμπληρώσουμε την τελική τιμή και ημερ/νια και ώρα 
+//αναχώρησης.
 public class PayEvent implements EventHandler<MouseEvent>{
 
     TableView tableView;
